@@ -2,7 +2,9 @@ import time
 import sys
 import json
 
-with open("./sprites.json", "r") as f:
+from colorama import Fore
+
+with open("./sprites.json", "r", encoding="utf-8") as f:
     sprites = json.load(f)
 
 H = len(sprites["egg"][0])
@@ -13,13 +15,12 @@ def draw(frame):
     # Clear each line and redraw
     for line in frame:
         sys.stdout.write("\033[2K\r")  # clear line
-        sys.stdout.write(line + "\n")
+        sys.stdout.write(Fore.YELLOW + line + Fore.RESET + "\n")
     sys.stdout.flush()
 
 # Print once to create space for the sprite (so moving up works)
 print("\n" * H, end="")
 
-# Example loop: redraw the same sprite repeatedly
 for i in range (0, 10):
     for sprite in sprites["egg"]:
         draw(sprite)
