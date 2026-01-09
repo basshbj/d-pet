@@ -1,27 +1,99 @@
+import pygame
 import time
-import sys
-import json
 
-from colorama import Fore
 
-with open("./sprites.json", "r", encoding="utf-8") as f:
-    sprites = json.load(f)
+# Environment settings
+SCREEN_W = 255
+SCREEN_H = 255
 
-H = len(sprites["egg"][0])
+SPRITE_W = 16
+SPRITE_H = 16
 
-def draw(frame):
-    # Move cursor up H lines (to the start of the previous frame)
-    sys.stdout.write(f"\033[{H}A")
-    # Clear each line and redraw
-    for line in frame:
-        sys.stdout.write("\033[2K\r")  # clear line
-        sys.stdout.write(Fore.YELLOW + line + Fore.RESET + "\n")
-    sys.stdout.flush()
+SPRITE_SCALE_W = SCREEN_W / SPRITE_W 
+SPRITE_SCALE_H = SCREEN_H / SPRITE_H 
 
-# Print once to create space for the sprite (so moving up works)
-print("\n" * H, end="")
+SPRITE_INTERVAL = 1.0  # seconds
 
-for i in range (0, 10):
-    for sprite in sprites["egg"]:
-        draw(sprite)
-        time.sleep(0.5)
+# pygame setup
+pygame.init()
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+clock = pygame.time.Clock()
+running = True
+dt = 0
+
+
+sprites = [
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0],
+        [0, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ],
+    [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0],
+        [0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+        [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    ]
+]
+
+sprint_index = 0
+elapsed_time = 0.0
+
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    screen.fill("black")
+    
+    if elapsed_time >= SPRITE_INTERVAL:
+        elapsed_time = 0.0
+        sprint_index += 1
+
+        if sprint_index >= len(sprites):
+            sprint_index = 0
+
+    for y, row in enumerate(sprites[sprint_index]):
+        for x, v in enumerate(row):
+            if v != 1:
+                continue
+
+            left   = round(x * SPRITE_SCALE_W)
+            top    = round(y * SPRITE_SCALE_H)
+            right  = round((x + 1) * SPRITE_SCALE_W)
+            bottom = round((y + 1) * SPRITE_SCALE_H)
+
+            rect = pygame.Rect(left, top, right - left, bottom - top)
+            pygame.draw.rect(screen, "yellow", rect)
+
+    pygame.display.flip()
+
+    dt = clock.tick(60) / 1000
+    elapsed_time += dt
+
+pygame.quit()
