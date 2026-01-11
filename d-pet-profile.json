@@ -2,9 +2,6 @@
   "stages": [
     {
       "stage": 0,
-      "type": "egg",
-      "cycles": 10,
-      "sprite_key": "egg",
       "stage_up": {
         "conditions": [
           {
