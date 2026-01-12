@@ -10,3 +10,6 @@ class SpriteManager():
     
     def get_egg_sprites(self):
         return self.sheet.stages[0].sprites
+
+    def get_baby_sprites(self):
+        return self.sheet.stages[1].sprites

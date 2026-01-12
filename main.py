@@ -30,16 +30,22 @@ elapsed_time = 0.0
 
 egg_sprites = sprite_manager.get_egg_sprites()
 
+cicles = 0
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
+    if cicles >= 10:
+        egg_sprites = sprite_manager.get_baby_sprites()
 
     screen.fill("black")
     
     if elapsed_time >= SPRITE_INTERVAL:
         elapsed_time = 0.0
         sprint_index += 1
+        cicles += 1
 
         if sprint_index >= len(egg_sprites):
             sprint_index = 0
