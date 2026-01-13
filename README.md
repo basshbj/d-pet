@@ -11,3 +11,6 @@
 
 ## DOC
 - [ ] Document current progress
+
+## GENERAL
+- [ ] Add state
