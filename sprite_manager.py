@@ -1,5 +1,5 @@
 import json
-from tools.utils import customJsonDecoder
+from tools.utils import customJsonDecoder, StageLevel
 
 class SpriteManager():
 
@@ -8,8 +8,5 @@ class SpriteManager():
             self.sheet = json.loads(f.read(), object_hook=customJsonDecoder)
 
     
-    def get_egg_sprites(self):
-        return self.sheet.stages[0].sprites
-
-    def get_baby_sprites(self):
-        return self.sheet.stages[1].sprites
+    def get_sprites(self, level: StageLevel):
+        return self.sheet.stages[level.value].sprites

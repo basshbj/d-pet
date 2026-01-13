@@ -1,6 +1,7 @@
 import pygame
 
 from sprite_manager import SpriteManager
+from tools.utils import StageLevel
 
 # Environment settings
 SCREEN_W = 255
@@ -28,7 +29,7 @@ sprite_manager = SpriteManager()
 sprint_index = 0
 elapsed_time = 0.0
 
-egg_sprites = sprite_manager.get_egg_sprites()
+sprites = sprite_manager.get_sprites(StageLevel.LEVEL_0)
 
 cicles = 0
 
@@ -38,7 +39,7 @@ while running:
             running = False
 
     if cicles >= 10:
-        egg_sprites = sprite_manager.get_baby_sprites()
+        sprites = sprite_manager.get_sprites(StageLevel.LEVEL_1)
 
     screen.fill("black")
     
@@ -47,10 +48,10 @@ while running:
         sprint_index += 1
         cicles += 1
 
-        if sprint_index >= len(egg_sprites):
+        if sprint_index >= len(sprites):
             sprint_index = 0
 
-    for y, row in enumerate(egg_sprites[sprint_index]):
+    for y, row in enumerate(sprites[sprint_index]):
         for x, v in enumerate(row):
             if v != "█":
                 continue
