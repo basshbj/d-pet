@@ -2,6 +2,7 @@ import pygame
 
 from sprite_manager import SpriteManager
 from tools.utils import StageLevel
+from tools.state import State
 
 # Environment settings
 SCREEN_W = 255
@@ -25,11 +26,13 @@ dt = 0
 # Sprites
 sprite_manager = SpriteManager()
 
+# State
+state = State()
 
 sprint_index = 0
 elapsed_time = 0.0
 
-sprites = sprite_manager.get_sprites(StageLevel.LEVEL_0)
+sprites = sprite_manager.get_sprites(state.STAGE_LEVEL)
 
 cicles = 0
 
@@ -39,7 +42,8 @@ while running:
             running = False
 
     if cicles >= 10:
-        sprites = sprite_manager.get_sprites(StageLevel.LEVEL_1)
+        state.STAGE_LEVEL = StageLevel.LEVEL_1
+        sprites = sprite_manager.get_sprites(state.STAGE_LEVEL)
 
     screen.fill("black")
     
