@@ -4,6 +4,7 @@
 ## SPRITES
 - [ ] Create Sprite for open egg animation
 - [ ] Define D-PET profile (Conditions to level up)
+- [ ] Need to change the logic to get the sprites based on the current state. Current logic is redundant 
 
 ## D-PET
 - [ ] Design and create a simple prototype of the life cycle
