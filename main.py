@@ -1,18 +1,12 @@
 import pygame
 
-from sprite_manager import SpriteManager
+from src.sprite_manager import SpriteManager
 from tools.utils import StageLevel
 from tools.state import State
 
 # Environment settings
 SCREEN_W = 255
 SCREEN_H = 255
-
-SPRITE_W = 16
-SPRITE_H = 16
-
-SPRITE_SCALE_W = SCREEN_W / SPRITE_W 
-SPRITE_SCALE_H = SCREEN_H / SPRITE_H 
 
 SPRITE_INTERVAL = 1.0  # seconds
 
@@ -23,54 +17,51 @@ clock = pygame.time.Clock()
 running = True
 dt = 0
 
-# Sprites
-sprite_manager = SpriteManager()
-
 # State
 state = State()
 
-sprint_index = 0
+sprite_index = 0
 elapsed_time = 0.0
-
-sprites = sprite_manager.get_sprites(state.STAGE_LEVEL)
 
 cicles = 0
 
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+# Callbacks
+def draw_screen(left, top, right, bottom):
+    rect = pygame.Rect(left, top, right - left, bottom - top)
+    pygame.draw.rect(screen, "yellow", rect)
 
-    if cicles >= 10:
-        state.STAGE_LEVEL = StageLevel.LEVEL_1
-        sprites = sprite_manager.get_sprites(state.STAGE_LEVEL)
 
-    screen.fill("black")
-    
-    if elapsed_time >= SPRITE_INTERVAL:
-        elapsed_time = 0.0
-        sprint_index += 1
-        cicles += 1
+# Main Script
 
-        if sprint_index >= len(sprites):
-            sprint_index = 0
+if __name__ == "__main__":
+    sprite_manager = SpriteManager(SCREEN_W, SCREEN_W)
 
-    for y, row in enumerate(sprites[sprint_index]):
-        for x, v in enumerate(row):
-            if v != "█":
-                continue
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-            left   = round(x * SPRITE_SCALE_W)
-            top    = round(y * SPRITE_SCALE_H)
-            right  = round((x + 1) * SPRITE_SCALE_W)
-            bottom = round((y + 1) * SPRITE_SCALE_H)
+        if cicles >= 10:
+            state.STAGE_LEVEL = StageLevel.LEVEL_1
+            sprite_index = 0
 
-            rect = pygame.Rect(left, top, right - left, bottom - top)
-            pygame.draw.rect(screen, "yellow", rect)
+        screen.fill("black")
+        
+        if elapsed_time >= SPRITE_INTERVAL:
+            elapsed_time = 0.0
+            sprite_index += 1
+            cicles += 1
 
-    pygame.display.flip()
+            if sprite_index >= sprite_manager.get_sprite_length(state.STAGE_LEVEL):
+                sprite_index = 0
+                
 
-    dt = clock.tick(60) / 1000
-    elapsed_time += dt
+        # Draw Sprite
+        sprite_manager.draw_sprite(state.STAGE_LEVEL, sprite_index, draw_screen)
 
-pygame.quit()
+        pygame.display.flip()
+
+        dt = clock.tick(60) / 1000
+        elapsed_time += dt
+
+    pygame.quit()
