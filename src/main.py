@@ -1,14 +1,16 @@
 import pygame
 
-from src.sprite_manager import SpriteManager
-from tools.utils import StageLevel
-from tools.state import State
+from resources.sprite_manager import SpriteManager
+from utils.utils import StageLevel
+from utils.state import State
 
 # Environment settings
 SCREEN_W = 255
 SCREEN_H = 255
 
 SPRITE_INTERVAL = 1.0  # seconds
+
+SPRITE_ASSET_PATH = "./assets/sprites.json"
 
 # pygame setup
 pygame.init()
@@ -34,7 +36,7 @@ def draw_screen(left, top, right, bottom):
 # Main Script
 
 if __name__ == "__main__":
-    sprite_manager = SpriteManager(SCREEN_W, SCREEN_W)
+    sprite_manager = SpriteManager(SCREEN_W, SCREEN_W, SPRITE_ASSET_PATH)
 
     while running:
         for event in pygame.event.get():

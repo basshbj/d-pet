@@ -1,17 +1,17 @@
 import json
-from tools.utils import customJsonDecoder, StageLevel
+from utils.utils import customJsonDecoder, StageLevel
 
 
 class SpriteManager():
 
-    def __init__(self, screen_width: int, screen_height: int):
+    def __init__(self, screen_width: int, screen_height: int, sprite_asset_path: str):
         SPRITE_W = 16
         SPRITE_H = 16
 
         self.SPRITE_SCALE_W = screen_width / SPRITE_W 
         self.SPRITE_SCALE_H = screen_height / SPRITE_H 
 
-        with open("./sprites.json", "r", encoding="utf-8") as f:
+        with open(sprite_asset_path, "r", encoding="utf-8") as f:
             self.sheet = json.loads(f.read(), object_hook=customJsonDecoder)
 
     
